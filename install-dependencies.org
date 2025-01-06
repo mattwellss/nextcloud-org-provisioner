@@ -1,0 +1,33 @@
+#+title: Install Dependencies
+#+author: Matthew Wells
+
+* Install Server Dependencies
+
+Ensure dependencies necessary for adding the docker repos are installed.
+#+begin_src shell :dir (concat org-my-project-root-sudo "")
+apt-get update
+DEBIAN_FRONTEND=noninteractive apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+#+end_src
+
+* Install docker
+#+begin_src eshell :dir (concat org-my-project-root-sudo "") :results output silent
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+#+end_src
+
+Add the docker repository.
+#+begin_src eshell :dir (concat org-my-project-root-sudo "") :results output silent
+(setq release (eshell-command-result "lsb_release -cs"))
+add-apt-repository (concat "deb [arch=amd64] https://download.docker.com/linux/ubuntu " release " stable")
+#+end_src
+
+#+begin_src shell :dir (concat org-my-project-root-sudo "") :results silent output
+apt-get update
+DEBIAN_FRONTEND=noninteractive apt-get install -y docker-ce docker-ce-cli containerd.io
+#+end_src
+
+** Test Docker installation
+
+#+begin_src eshell :dir (concat org-my-destination "") :results silent output
+docker run --rm hello-world
+#+end_src
+

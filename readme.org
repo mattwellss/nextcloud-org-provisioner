@@ -1,0 +1,24 @@
+#+title: Nextcloud org-babel Provisioner
+#+author: Matthew Wells
+
+This project enables the provisioning of a Nextcloud server using examples from the
+[[https://github.com/nextcloud/docker][Nextcloud Docker repository]].
+
+* Installation & Initial Setup
+
+ - clone this repository
+ - copy =.dir-locals.el.sample= to =.dir-locals.el=
+ - populate the variables for connecting to your server
+ - ensure your emacs is configured properly to execute and tangle the necessary file types (todo: instructions)
+
+* Provisioning
+
+Execute / tangle the src blocks in these files in this order
+
+ - user-setup.org
+ - install-dependencies.org
+ - docker-compose-config.org
+
+* Testing
+
+Outcomes of various tasks have validation src blocks

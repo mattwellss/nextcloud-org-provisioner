@@ -1,0 +1,78 @@
+#+title: User Setup
+#+author: Matthew Wells
+
+* Initial Connection
+
+We need to initially connect to the server as root (in order to create our main user). This will fail once root SSH is disabled.
+
+#+name: connect-as-root
+#+begin_src eshell :results silent output :dir (concat org-my-initial-root-connection "")
+whoami
+#+end_src
+
+* Users
+
+We'll create user defined in =org-my-username= in groups /sudo/, /www-data/. The /docker/ group will be added later.
+
+#+begin_src eshell :dir (concat org-my-initial-root-connection "") :results silent output :var user=org-my-username
+useradd $user -m -G sudo,www-data # we'll add this user to "docker" later on
+#+end_src
+
+** Testing
+
+*** Ensure user exists
+#+begin_src eshell :dir (concat org-my-initial-root-connection "") :noweb yes :results silent output :var user=org-my-username
+getent passwd | awk -F: '{print $1}' | grep $user
+#+end_src
+
+*** Ensure user has a directory
+#+begin_src eshell  :dir (concat org-my-initial-root-connection "/home/" org-my-username) :results silent output
+ls
+#+end_src
+
+*** Ensure user is in the proper groups
+#+begin_src eshell  :dir (concat org-my-project-root "") :results silent output :var user=org-my-username
+groups $user
+#+end_src
+
+* Server Connection
+
+Now that user exists and is a "sudoer", we can SSH using that account and elevate privleges.
+It's important to be able to connect as root (to install dependencies and stuff)
+
+** Testing
+
+Make sure we can SSH as user
+
+#+begin_src eshell :dir (concat org-my-project-root) :results output silent
+whoami
+#+end_src
+
+Additionally, test root access
+
+#+begin_src eshell :results output silent :dir (concat org-my-project-root-sudo "")
+whoami
+#+end_src
+
+* Cleaning up Root
+
+Now that we know user can access the server and sudo, it's time to eliminate root SSH access.
+
+#+begin_src config :tangle (concat org-my-project-root-sudo  "/etc/ssh/sshd_config.d/disable-root.conf")
+PermitRootLogin no
+#+end_src
+
+** restart sshd
+
+Now that configuration has changed, we have to restart the SSH service
+
+#+begin_src eshell :dir (concat org-my-project-root-sudo "") :results output silent
+service ssh restart
+#+end_src
+
+** test
+
+This should now fail!
+#+begin_src eshell :dir (concat org-my-initial-root-connection "") :results silent output
+whoami
+#+end_src

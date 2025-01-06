@@ -1,0 +1,18 @@
+#+title: Backups
+#+author: Matthew Wells
+
+* Generate backup
+
+This generates a backup WITHOUT user data
+
+#+begin_src eshell :dir (concat org-my-docker-app-root "/") :var today=(format-time-string "%Y-%m-%d") :results silent output
+tar --exclude data -czf tmp/backups/nextcloud-nodata_$today.tgz var/www/html/
+#+end_src
+
+* TODO Restore from backup
+
+A backup is three parts: config files, database, user files. Restoring to a backup will likely work like:
+  - Start the system like it's brand new
+  - Overwrite new system's config directory with backed up config directory
+  - Completely destroy user files directory, put backed up user files directory in its place
+  - Drop new database, import backed up database

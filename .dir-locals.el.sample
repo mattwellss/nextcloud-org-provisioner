@@ -1,0 +1,12 @@
+;;; Directory Local Variables            -*- no-byte-compile: t -*-
+;;; For more information see (info "(emacs) Directory Variables")
+
+;;; Instructions:
+;;; - copy this file to .dir-locals.el
+;;; - populate the values for the variables in this file
+;;;   examples shown use tramp connections
+((org-mode . ((org-my-initial-root-connection . "") ; "/ssh:root@server:"
+              (org-my-username . "") ; / "user"
+              (org-my-project-root . "") ; / "/ssh:user@server:"
+              (org-my-docker-app-root . "") ; "/ssh:user@server|docker:user_app:"
+              (org-my-project-root-sudo . "")))) ; "/ssh:user@server|sudo:root@server:
