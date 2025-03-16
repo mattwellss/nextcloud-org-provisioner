@@ -42,7 +42,7 @@ Place the docker-compose file in position on the remote server
       restart: always
 
     app:
-      image: nextcloud:30-fpm-alpine
+      image: nextcloud:31-fpm-alpine
       restart: always
       volumes:
         - nextcloud:/var/www/html
