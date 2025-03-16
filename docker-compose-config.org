@@ -356,28 +356,28 @@ COPY nginx.conf /etc/nginx/nginx.conf
 
 View container status
 #+begin_src eshell :results silent output :dir (concat org-my-project-root "")
-  docker-compose --no-ansi ps
+  docker compose --no-ansi ps
 #+end_src
 
 ** Start Services
 Start all the containers
 
 #+begin_src eshell :results silent output :dir org-my-project-root
-  docker-compose --no-ansi up -d
+  docker compose --no-ansi up -d
 #+end_src
 
 ** Stop Services
 Stop all the containers
 
 #+begin_src eshell :results silent output :dir (concat org-my-project-root "")
-  docker-compose --no-ansi stop
+  docker compose --no-ansi stop
 #+end_src
 
 ** Update Services
 
 Get new versions of the containers
 #+begin_src eshell :results silent output :dir (concat org-my-project-root "")
-  docker-compose --no-ansi pull
+  docker compose --no-ansi pull
 #+end_src
 
 ** Check Logs
@@ -385,7 +385,7 @@ Get new versions of the containers
 Get a tail of the previous 50 log entries
 
 #+begin_src shell :results silent output :dir (concat org-my-project-root "")
-  docker-compose --no-ansi logs --tail 50 web
+  docker compose --no-ansi logs --tail 50 web
 #+end_src
 
 
