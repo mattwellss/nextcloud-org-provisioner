@@ -29,7 +29,7 @@ Place the docker-compose file in position on the remote server
 #+begin_src yaml :tangle (concat org-my-project-root "docker-compose.yml")
   services:
     db:
-      image: mariadb
+      image: mariadb:11.4
       command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
       restart: always
       volumes:
