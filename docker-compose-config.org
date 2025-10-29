@@ -57,10 +57,11 @@ Place the docker-compose file in position on the remote server
         - redis
 
     web:
-      build: ./web
+      image: nginx:alpine-slim
       restart: always
       volumes:
-        - nextcloud:/var/www/html:ro
+        - ./web/nginx.conf:/etc/nginx/nginx.conf:ro
+        - nextcloud:/var/www/html:z,ro
       env_file:
         - .env
       depends_on:
@@ -139,11 +140,7 @@ proxy_request_buffering off;
 
 ** Web container
 
-Generate the dockerfile and configuration for the web container
-#+begin_src Dockerfile :tangle (concat org-my-project-root "web/Dockerfile") :mkdirp yes
-FROM nginx:alpine
-COPY nginx.conf /etc/nginx/nginx.conf  
-#+end_src
+Generate configuration for the web container
 
 #+begin_src conf :tangle (concat org-my-project-root "web/nginx.conf") :mkdirp yes
   worker_processes auto;
@@ -331,7 +328,7 @@ COPY nginx.conf /etc/nginx/nginx.conf
               }
           }
 
-          location ~ \.woff2?$ {
+          location ~ \.(otf|woff2?)$ {
               try_files $uri /index.php$request_uri;
               expires 7d;         # Cache-Control policy borrowed from `.htaccess`
               access_log off;     # Optional: Don't log access to assets
