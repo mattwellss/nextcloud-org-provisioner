@@ -129,12 +129,13 @@ Place the docker-compose file in position on the remote server
 
 Generate the dockerfile and configuration for the proxy container
 #+begin_src Dockerfile :tangle (concat org-my-project-root "proxy/Dockerfile") :mkdirp yes
-FROM jwilder/nginx-proxy:alpine
+FROM nginxproxy/nginx-proxy:1.7-alpine
+
 COPY uploadsize.conf /etc/nginx/conf.d/uploadsize.conf
 #+end_src
 
 #+begin_src conf :tangle (concat org-my-project-root "proxy/uploadsize.conf") :mkdirp yes
-client_max_body_size 1G;
+client_max_body_size 5G;
 proxy_request_buffering off;
 #+end_src
 
@@ -159,7 +160,6 @@ Generate configuration for the web container
       default_type  application/octet-stream;
       types {
           text/javascript mjs;
-          application/wasm wasm;
       }
 
       log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
@@ -227,7 +227,6 @@ Generate configuration for the web container
           add_header X-Frame-Options                      "SAMEORIGIN"        always;
           add_header X-Permitted-Cross-Domain-Policies    "none"              always;
           add_header X-Robots-Tag                         "noindex, nofollow" always;
-          add_header X-XSS-Protection                     "1; mode=block"     always;
 
           # Remove X-Powered-By, which is an information leak
           fastcgi_hide_header X-Powered-By;
@@ -306,13 +305,13 @@ Generate configuration for the web container
               fastcgi_pass php-handler;
 
               fastcgi_intercept_errors on;
-              fastcgi_request_buffering off;
+              fastcgi_request_buffering on;
 
               fastcgi_max_temp_file_size 0;
           }
 
           # Serve static files
-          location ~ \.(?:css|js|mjs|svg|gif|ico|jpg|png|webp|wasm|tflite|map|ogg|flac)$ {
+          location ~ \.(?:css|js|mjs|svg|gif|ico|jpg|png|webp|wasm|tflite|map|ogg|flac|mp4|webm)$ {
               try_files $uri /index.php$request_uri;
               add_header Cache-Control "public, max-age=15778463$asset_immutable";
               add_header Referrer-Policy                   "no-referrer"       always;
@@ -320,12 +319,7 @@ Generate configuration for the web container
               add_header X-Frame-Options                   "SAMEORIGIN"        always;
               add_header X-Permitted-Cross-Domain-Policies "none"              always;
               add_header X-Robots-Tag                      "noindex, nofollow" always;
-              add_header X-XSS-Protection                  "1; mode=block"     always;
               access_log off;     # Optional: Don't log access to assets
-
-              location ~ \.wasm$ {
-                  default_type application/wasm;
-              }
           }
 
           location ~ \.(otf|woff2?)$ {
